@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Credit Card Fraud Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Credit Card Fraud Detection</h1>
+            <p>Analyze transaction features to detect potentially fraudulent activity</p>
+        </header>
+
+        <main>
+            <!-- Info Section -->
+            <div class="card info-card">
+                <h2>How It Works</h2>
+                <p>This application uses machine learning to detect potentially fraudulent credit card transactions based on transaction features. Enter the transaction details below to get a prediction.</p>
+                <div class="features-info">
+                    <p><strong>Features:</strong> Time, V1–V28 (anonymized PCA features), and Amount</p>
+                </div>
+            </div>
+
+            <form id="prediction-form" method="POST" action="/predict">
+            <div class="card input-card">
+                <h2>Enter Transaction Details</h2>
+                <form id="prediction-form" method="POST" action="/predict">
+                    <div class="form-tabs">
+                        <button type="button" class="tab-btn active" data-tab="basic">Basic</button>
+                        <button type="button" class="tab-btn" data-tab="advanced">Advanced</button>
+                    </div>
+
+                    <!-- Basic Tab -->
+                    <div class="tab-content" id="basic-tab">
+                        <div class="form-group">
+                            <label for="time">Time (seconds since first transaction)</label>
+                            <input type="number" id="time" name="Time" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Transaction Amount</label>
+                            <input type="number" id="amount" name="Amount" step="0.01" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="V1">V1</label>
+                                <input type="number" id="V1" name="V1" step="0.0001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="V2">V2</label>
+                                <input type="number" id="V2" name="V2" step="0.0001" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="V3">V3</label>
+                                <input type="number" id="V3" name="V3" step="0.0001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="V4">V4</label>
+                                <input type="number" id="V4" name="V4" step="0.0001" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Tab -->
+                    <div class="tab-content hidden" id="advanced-tab">
+                        <div class="advanced-grid">
+                            {% for i in range(5, 29) %}
+                            <div class="form-group">
+                                <label for="V{{ i }}">V{{ i }}</label>
+                                <input type="number" id="V{{ i }}" name="V{{ i }}" step="0.0001" required>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="form-actions">
+                        <button type="button" id="random-data-btn">Generate Random Data</button>
+                        <button type="submit" id="predict-btn">Analyze Transaction</button>
+                    </div>
+                </form>
+
+               
+            </div>
+        </main>
+    </div>
+
+    
+ <script>
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            button.classList.add('active');
+            const tab = document.getElementById(button.dataset.tab + '-tab');
+            tab.classList.remove('hidden');
+        });
+    });
+
+    //  Random Data Generator Script
+    document.getElementById('random-data-btn').addEventListener('click', () => {
+        const getRandom = (min, max, decimals = 4) => {
+            return (Math.random() * (max - min) + min).toFixed(decimals);
+        };
+
+        // Fill basic fields
+        document.getElementById('time').value = getRandom(0, 172800, 2); // 2 days range
+        document.getElementById('amount').value = getRandom(0.01, 2500, 2); // Amount range
+
+        for (let i = 1; i <= 28; i++) {
+            const input = document.getElementById(`V${i}`);
+            if (input) {
+                input.value = getRandom(-20, 20); // Example PCA feature range
+            }
+        }
+    });
+ </script>
+
+</body>
+</html>
