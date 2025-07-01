@@ -67,7 +67,7 @@ Chosen for its **simplicity**, **interpretability**, **performance**, and **low 
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/credit-card-fraud-detector.git
+git clone https://github.com/adura123/credit-card-fraud-detector.git
 cd credit-card-fraud-detector
 pip install -r requirements.txt
 ```
